@@ -5,8 +5,26 @@ date: "10/8/2019"
 output: github_document
 ---
 
-### Problem 1 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+### Problem 1 
+
+
+Load the Instacart data.
+```{r}
+library(p8105.datasets)
+data("instacart")
+
+```
+
+Write a short description of the dataset, noting the size and structure of the data, describing some key variables, and giving illstrative examples of observations. Then, do or answer the following (commenting on the results of each):
+
+- How many aisles are there, and which aisles are the most items ordered from?
+
+```{r}
+
+```
+
