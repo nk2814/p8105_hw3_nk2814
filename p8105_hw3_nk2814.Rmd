@@ -1,0 +1,12 @@
+---
+title: "p8105_hw3_nk2814"
+author: "Naama Kipperman"
+date: "10/8/2019"
+output: github_document
+---
+
+### Problem 1 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
