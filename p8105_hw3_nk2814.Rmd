@@ -54,11 +54,26 @@ instacart %>%
   ) %>% 
   arrange(desc(number_orders)) %>% 
   filter(number_orders > 10000) %>% 
-  ggplot(aes(x=aisle, y=number_orders, color=department))+
+  ggplot(aes(x=aisle, y=number_orders, fill=department))+
   geom_col()+
-  facet_grid(.~department)
-
+  facet_wrap(~department)
+  
 
 ```
+
+Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.
+
+```{r}
+instacart %>% 
+  janitor::clean_names() %>% 
+  group_by(aisle, product_name) %>% 
+  summarize(
+    number_orders=n()) %>% 
+  arrange(aisle, desc(number_orders)) %>% 
+  filter(aisle %in% c("baking ingredients", "dog food care", "packaged vegetables fruits")) %>% 
+  top_n(n=3) %>% 
+  knitr::kable()
+```
+
 
 
