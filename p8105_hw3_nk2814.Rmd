@@ -25,7 +25,7 @@ data("instacart")
 
 The goal is to do some exploration of this dataset. To that end, write a short description of the dataset, noting the size and structure of the data, describing some key variables, and giving illstrative examples of observations. Then, do or answer the following (commenting on the results of each):
 
-How many aisles are there, and which aisles are the most items ordered from?
+**How many aisles are there, and which aisles are the most items ordered from?**
 
 There are 134 distinct aisles.
 The aisles from which the most items are ordered are 'fresh vegetables', 'fresh fruits', and 'packaged vegetables fruits'.
@@ -42,7 +42,7 @@ instacart %>%
 
 ```
 
-Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it.
+**Make a plot that shows the number of items ordered in each aisle, limiting this to aisles with more than 10000 items ordered. Arrange aisles sensibly, and organize your plot so others can read it.**
 
 ```{r}
 
@@ -60,7 +60,7 @@ instacart %>%
 
 ```
 
-Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.
+**Make a table showing the three most popular items in each of the aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”. Include the number of times each item is ordered in your table.**
 
 ```{r}
 instacart %>% 
@@ -75,7 +75,7 @@ instacart %>%
 ```
 
 
-Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table)
+**Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table)**
 
 ```{r}
 
@@ -129,9 +129,9 @@ brfss_smart2010 %>%
 
 ```
 
-In 2002, the states that were observed at at least 7 locations were  Connecticut, Florida, Massachusetts, North Carolina, New Jersey, and Pennsylvania.
+In **2002**, the states that were observed at at least 7 locations were  **Connecticut, Florida, Massachusetts, North Carolina, New Jersey, and Pennsylvania**.
 
-In 2010, the states that were observed at at least 7 locations were California, Colorado, Florida, Massachusetts, Maryland, North Carolina, Nebraska, New Jersey, New York, Ohio, Pennsylvania, South Carolina, Texas, and Washington. 
+In **2010**, the states that were observed at at least 7 locations were **California, Colorado, Florida, Massachusetts, Maryland, North Carolina, Nebraska, New Jersey, New York, Ohio, Pennsylvania, South Carolina, Texas, and Washington**. 
 
 ```{r}
 
@@ -189,7 +189,7 @@ brfss_smart2010 %>%
 
 ### Problem 3
 
-Load, tidy, and otherwise wrangle the data. Your final dataset should include all originally observed variables and values; have useful variable names; include a weekday vs weekend variable; and encode data with reasonable variable classes. Describe the resulting dataset (e.g. what variables exist, how many observations, etc).
+Load, tidy, and otherwise wrangle the data. Your final dataset should include all originally observed variables and values; have useful variable names; include a weekday vs weekend variable; and encode data with reasonable variable classes. 
 
 ```{r}
 
@@ -200,8 +200,39 @@ p3_accel =
   janitor::clean_names() %>% 
   mutate(
     week_part = if_else(day %in% c("Saturday", "Sunday"), 'weekend', 'weekday')) %>% 
-  pivot_longer(activity_1:activity_1440, names_to="minute", values_to="activity")
+  pivot_longer(activity_1:activity_1440, names_to="minute", values_to="activity") %>% 
+  separate(minute, into=c("activity_label", "minute"), sep="_") %>% 
+  select(-activity_label) %>% 
+  mutate(
+    minute = as.integer(minute),
+    day = factor(day, levels=c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"), order=TRUE)
+  ) 
   
   
+```
+
+**Describe the resulting dataset**
+
+
+This dataset captures five weeks of accelerometer data collected on a 63 year-old male with BMI 25; the data captures the patient's accelerometer activity in each minute of each day over the course of those 5 weeks. The main variables of interest are 'week, 'day', 'minute', and 'activity'. The number of observations in this dataset is `r nrow(p3_accel) ` observations. 
+
+--------------
+
+Traditional analyses of accelerometer data focus on the total activity over the day. Using your tidied dataset, aggregate accross minutes to create a total activity variable for each day, and create a table showing these totals. 
+
+**Are any trends apparent?**
+
+Overall, there isn't a particularly distinct pattern that is apparent just from looking at this table. However, a few things stand out. Across the 5 weeks, the patient's total activity on Tuesdays and Wednesdays tend to be relatively consistent, whereas on the other days of the week, there's a lot of week-by-week variation in the daily activity. Additionally, something notable is that on Saturday of both Week 4 and Week 4, the total activity is very, very low (1440) compared to all the other days in this dataset. 
+
+
+
+```{r}
+
+p3_accel %>% 
+  group_by(week, day) %>% 
+  summarize(total_day_activity = sum(activity)) %>% 
+  pivot_wider(names_from = day, values_from=total_day_activity)
+
+
 ```
 
