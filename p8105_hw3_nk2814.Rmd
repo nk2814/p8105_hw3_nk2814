@@ -17,7 +17,6 @@ Load the Instacart data and necessary packages you might need.
 ```{r}
 library(p8105.datasets)
 library(tidyverse)
-library("sqldf")
 library(dplyr)
 data("instacart") 
 
